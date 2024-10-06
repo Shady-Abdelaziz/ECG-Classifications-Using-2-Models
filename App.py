@@ -3,31 +3,26 @@ import pandas as pd
 import pickle
 import zipfile
 import os
-import gdown
 
-models_url = 'https://github.com/Shady-Abdelaziz/ECG-Classifications-Using-2-Models/raw/refs/heads/main/ECG%20Models.zip'
 
 @st.cache(allow_output_mutation=True)
 def load_models():
-    # Download the models.zip 
-    if not os.path.exists('ECG Models.zip'):
-        gdown.download(models_url, 'ECG Models.zip', quiet=False)
-
+    
     # Unzip the file
-    with zipfile.ZipFile('ECG Models.zip', 'r') as zip_ref:
+    with zipfile.ZipFile('Models.zip', 'r') as zip_ref:
         zip_ref.extractall()
 
     # Load the RandomForest model
-    with open('rf_model.pkl', 'rb') as f:
-        rf_model = pickle.load(f)
+    with open('Abnormal_model.pkl', 'rb') as f:
+        Abnormal_model = pickle.load(f)
 
     # Load the XGBoost model
     with open('xgb_model.pkl', 'rb') as f:
         xgb_model = pickle.load(f)
 
-    return rf_model, xgb_model
+    return Abnormal_model, xgb_model
 
-rf_model, xgb_model = load_models()
+Abnormal_model, xgb_model = load_models()
 
 # Streamlit App Code
 st.title("ECG Classification using ML Models")
@@ -40,14 +35,14 @@ if uploaded_file is not None:
     X_test = test_data.iloc[:, :100]
 
     # Radio buttons for model selection
-    model_choice = st.radio("Choose a model", ('RandomForest', 'XGBoost'))
+    model_choice = st.radio("Choose a model", ('Binary', 'Abnormal'))
 
     # Predict button
     if st.button("Predict"):
-        if model_choice == 'RandomForest':
-            y_pred = rf_model.predict(X_test)
-        else:
+        if model_choice == 'Binary':
             y_pred = xgb_model.predict(X_test)
+        else:
+            y_pred = Abnormal_model.predict(X_test)
         st.write("Predictions:", y_pred)
 
 # About section
