@@ -30,14 +30,17 @@ if uploaded_file is not None:
     try:
         # Read the uploaded CSV file
         test_data = pd.read_csv(uploaded_file, header=None)
-        if test_data.shape[1] < 100:
+        num_columns = test_data.shape[1]
+
+        if num_columns < 100:
             st.error("Uploaded file must contain at least 100 columns.")
         else:
+            # Use only the first 100 columns if there are more
             X_test = test_data.iloc[:, :100]
 
             # First, use XGBoost to predict if the ECG is abnormal
             if st.button("Predict"):
-                binary_pred = xgb_model.predict(X_test)  # Ensure this line is correctly indented
+                binary_pred = xgb_model.predict(X_test)  # Predict using XGBoost
                 results = []
 
                 # Loop through each prediction in the array
@@ -45,9 +48,9 @@ if uploaded_file is not None:
                     result = "normal" if pred == 0 else "abnormal"
                     results.append(result)
 
-                    # If the prediction is abnormal, predict further
+                    # If the prediction is abnormal, predict further using the Abnormal model
                     if result == "abnormal":
-                        abnormal_pred = Abnormal_model.predict(X_test[idx].values.reshape(1, -1)) + 1
+                        abnormal_pred = Abnormal_model.predict(X_test.iloc[idx].values.reshape(1, -1)) + 1
                         st.write(f"Sample {idx}: Detailed abnormal classification prediction: {abnormal_pred[0]}")
 
                 # Display the summary of predictions
