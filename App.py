@@ -37,17 +37,21 @@ if uploaded_file is not None:
 
     # First, use XGBoost to predict if the ECG is abnormal
     if st.button("Predict"):
-        binary_pred = xgb_model.predict(X_test)
+    binary_pred = xgb_model.predict(X_test)
+    results = []
+    
+    # Loop through each prediction in the array
+    for idx, pred in enumerate(binary_pred):
+        result = "normal" if pred == 0 else "abnormal"
+        results.append(result)
         
-        # Display the result of the XGBoost binary classification
-        if binary_pred == 0:
-            st.write("The ECG is classified as **normal**.")
-        else:
-            st.write("The ECG is classified as **abnormal**.")
-            
-            # If abnormal, further classify using the Abnormal model
-            abnormal_pred = Abnormal_model.predict(X_test)+1
-            st.write("Detailed abnormal classification prediction:", abnormal_pred)
+        # If the prediction is abnormal, predict further
+        if result == "abnormal":
+            abnormal_pred = Abnormal_model.predict(X_test[idx].values.reshape(1, -1)) + 1
+            st.write(f"Sample {idx}: Detailed abnormal classification prediction: {abnormal_pred[0]}")
+    
+    # Display the summary of predictions
+    st.write("Summary of predictions:", results)
 
 # About section with updated information
 st.sidebar.title("About")
