@@ -1,4 +1,4 @@
-# ECG Heartbeat Categorization Model Using Two Models
+# ECG Heartbeat Categorization Using Two Models
 
 ## Overview
 
