@@ -48,20 +48,25 @@ if uploaded_file is not None:
 
                 # Predict using XGBoost
                 binary_pred = xgb_model.predict(X_test)
-                results = []
+                results_data = []
 
-                # Loop through each prediction in the array
+                # Loop through each prediction and collect the result with index
                 for idx, pred in enumerate(binary_pred):
                     result = "normal" if pred == 0 else "abnormal"
-                    results.append(result)
+                    row = [idx, result]
 
-                    # If the prediction is abnormal, predict further using the Abnormal model
+                    # If abnormal, append the additional prediction
                     if result == "abnormal":
                         abnormal_pred = Abnormal_model.predict(X_test.iloc[idx].values.reshape(1, -1)) + 1
-                        results_placeholder.write(f"Sample {idx}: Detailed abnormal classification prediction: {abnormal_pred[0]}")
+                        row.append(abnormal_pred[0])  # Add detailed abnormal class
 
-                # Display the summary of predictions
-                results_placeholder.write("Summary of predictions: " + ", ".join(results))
+                    results_data.append(row)
+
+                # Create a DataFrame to display the results in tabular form
+                results_df = pd.DataFrame(results_data, columns=["Index", "Binary Prediction", "Detailed Prediction (if abnormal)"])
+
+                # Display the DataFrame in Streamlit
+                results_placeholder.write(results_df)
 
     except Exception as e:
         st.error(f"Error reading the file: {e}")
