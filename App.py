@@ -55,10 +55,12 @@ if uploaded_file is not None:
                     result = "normal" if pred == 0 else "abnormal"
                     row = [idx, result]
 
-                    # If abnormal, append the additional prediction
+                    # If abnormal, append the additional prediction, else append None for detailed prediction
                     if result == "abnormal":
                         abnormal_pred = Abnormal_model.predict(X_test.iloc[idx].values.reshape(1, -1)) + 1
                         row.append(abnormal_pred[0])  # Add detailed abnormal class
+                    else:
+                        row.append(None)  # Append None for normal cases
 
                     results_data.append(row)
 
