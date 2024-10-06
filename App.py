@@ -50,10 +50,10 @@ if uploaded_file is not None:
                 binary_pred = xgb_model.predict(X_test)
                 results_data = []
 
-                # Loop through each prediction and collect the result with index
+                # Loop through each prediction and collect the result
                 for idx, pred in enumerate(binary_pred):
                     result = "normal" if pred == 0 else "abnormal"
-                    row = [idx, result]
+                    row = [result]
 
                     # If abnormal, append the additional prediction, else append None for detailed prediction
                     if result == "abnormal":
@@ -64,10 +64,10 @@ if uploaded_file is not None:
 
                     results_data.append(row)
 
-                # Create a DataFrame to display the results in tabular form
-                results_df = pd.DataFrame(results_data, columns=["Index", "Binary Prediction", "Detailed Prediction (if abnormal)"])
+                # Create a DataFrame without the Index column
+                results_df = pd.DataFrame(results_data, columns=["Binary Prediction", "Detailed Prediction (if abnormal)"])
 
-                # Display the DataFrame in Streamlit
+                # Display the DataFrame in Streamlit without index
                 results_placeholder.write(results_df)
 
     except Exception as e:
