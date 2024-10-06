@@ -26,6 +26,9 @@ st.title("ECG Classification: Binary & Abnormal Detection")
 # File uploader for test data
 uploaded_file = st.file_uploader("Upload CSV test file", type=["csv"])
 
+# Placeholder for results to allow clearing
+results_placeholder = st.empty()
+
 if uploaded_file is not None:
     try:
         # Read the uploaded CSV file
@@ -40,7 +43,11 @@ if uploaded_file is not None:
 
             # First, use XGBoost to predict if the ECG is abnormal
             if st.button("Predict"):
-                binary_pred = xgb_model.predict(X_test)  # Predict using XGBoost
+                # Clear previous results
+                results_placeholder.empty()
+
+                # Predict using XGBoost
+                binary_pred = xgb_model.predict(X_test)
                 results = []
 
                 # Loop through each prediction in the array
@@ -51,10 +58,10 @@ if uploaded_file is not None:
                     # If the prediction is abnormal, predict further using the Abnormal model
                     if result == "abnormal":
                         abnormal_pred = Abnormal_model.predict(X_test.iloc[idx].values.reshape(1, -1)) + 1
-                        st.write(f"Sample {idx}: Detailed abnormal classification prediction: {abnormal_pred[0]}")
+                        results_placeholder.write(f"Sample {idx}: Detailed abnormal classification prediction: {abnormal_pred[0]}")
 
                 # Display the summary of predictions
-                st.write("Summary of predictions:", results)
+                results_placeholder.write("Summary of predictions: " + ", ".join(results))
 
     except Exception as e:
         st.error(f"Error reading the file: {e}")
