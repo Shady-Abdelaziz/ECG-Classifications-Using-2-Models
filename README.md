@@ -29,17 +29,15 @@ To run the code in this repository, ensure you have the following installed:
    git clone https://github.com/Shady-Abdelaziz/ECG-Classifications-Using-2-Models.git
    cd ECG-Classifications-Using-2-Models
 
-Deployment
+### Deployment
 
 The ECG Heartbeat Categorization model is deployed as a web application using Streamlit. You can access the deployed app at the following link:
 
-ECG Heartbeat Categorization Streamlit App
-Usage
+[ECG Heartbeat Categorization Streamlit App
+](https://ecg-classifications-using-2-models-vm8tfwbvgcddrrjpqncg5p.streamlit.app/)
+
+## Usage
 
 After deploying the application, follow the on-screen instructions to upload ECG data and obtain categorizations based on the trained models.
 Contributing
 
-If you would like to contribute to this project, please fork the repository and create a pull request with your changes.
-License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
