@@ -77,6 +77,6 @@ if uploaded_file is not None:
 st.sidebar.title("About")
 st.sidebar.info("""
 This app first classifies ECG signals using a pre-trained XGBoost model to determine if the signal is abnormal.
-If the signal is abnormal, a second model (RandomForest) provides further classification.
+If the signal is abnormal, a second model provides further classification ( 1 - 2 -3 - 4 ).
 Upload a CSV file with test data (100 columns for features) and receive a prediction.
 """)
